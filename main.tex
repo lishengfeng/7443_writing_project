@@ -46,6 +46,11 @@
 % For tracking purposes - this is V2.0 - May 2012
 \documentclass{sig-alternate}
 \usepackage{comment}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{tabularx}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\renewcommand\tabularxcolumn[1]{>{\Centering}m{#1}}
 
 \begin{document}
 %
@@ -170,7 +175,7 @@ Virtual machine begins with some type of infrastructure which could be you lapto
 Each guest OS requires its own requirement of hardware resources. Assume each guest OS require 1GB disk space, then the total disk space required would be 1GB $\times$ 3. Not to mention other requirements such as CPU, memory and network. Whenever an instance starts within the virtual environment, all the resources that have been assigned to it start being used. So if you assign four gigabytes of RAM to a virtual server as soon as that virtual server has started, four gigabytes of RAM from the hardware will automatically be assigned to that virtual server. If you have three server that boot up with four gigabytes of RAM, 4GB $\times$ 3 will be allocated to those servers whether or not they actually need it. Each one of those servers may only need one gigabyte RAM currently and other idle RAM can't be given somewhere else. Every single instance of an operating system has to have these over-allocated resources allocated to it and  This results in a lot of resources waste. Another issue is that the virtual machine emulating an entire server which means you have to run the whole boot up process. Suppose you create a virtual server that only does DNS, when you do some configuration, you have to reboot the entire computer and going through the whole boot process which takes a lot of time. 
 
 \section{Docker Containers}
-At the beginning, the docker contains also need the infrastructure. The second level is the host operating system. Then we have a layer called docker daemon. Docker daemon is a service that runs in the background on our host OS and manages everything required to run and interact with docker containers. After that, we have binaries and libraries just like the virtual machines but instead of being ran on a guest OS, they get built into special packages called docker images. The docker daemon runs those images. The applications would end up residing in its own docker image and will be managed independently by the docker daemon. Typically, each application and its library dependencies get packed into the same docker image. Each application is still isolated. In docker scenario, we don't need to run any type of hypervisor or virtual machine. Instead the docker daemon communicates directly with the host operating system and knows how to ration the resources for the running docker containers. It's also an expert and ensuring each container is isolated from both the host OS and other containers. There is also no virtualization needed with docker since it runs directly on the host OS. The Figure \ref{fig:da} shows the architecture of the docker. 
+At the beginning, the docker containers also need the infrastructure. The second level is the host operating system. Then we have a layer called docker daemon. Docker daemon is a service that runs in the background on our host OS and manages everything required to run and interact with docker containers. After that, we have binaries and libraries just like the virtual machines but instead of being ran on a guest OS, they get built into special packages called docker images. The docker daemon runs those images. The applications would end up residing in its own docker image and will be managed independently by the docker daemon. Typically, each application and its library dependencies get packed into the same docker image. Each application is still isolated. In docker scenario, we don't need to run any type of hypervisor or virtual machine. Instead the docker daemon communicates directly with the host operating system and knows how to ration the resources for the running docker containers. It's also an expert and ensuring each container is isolated from both the host OS and other containers. There is also no virtualization needed with docker since it runs directly on the host OS. The Figure \ref{fig:da} shows the architecture of the docker. 
 
 \begin{figure}[ht]
 \centering
@@ -181,53 +186,40 @@ At the beginning, the docker contains also need the infrastructure. The second l
 \end{figure}
 
 \subsection{Advantage of Docker(LXC)}
-Typically, the body of a paper is organized
-into a hierarchical structure, with numbered or unnumbered
-headings for sections, subsections, sub-subsections, and even
-smaller sections.  The command \texttt{{\char'134}section} that
-precedes this paragraph is part of such a
-hierarchy.\footnote{This is the second footnote.  It
-starts a series of three footnotes that add nothing
-informational, but just give an idea of how footnotes work
-and look. It is a wordy one, just so you see
-how a longish one plays out.} \LaTeX\ handles the numbering
-and placement of these headings for you, when you use
-the appropriate heading commands around the titles
-of the headings.  If you want a sub-subsection or
-smaller part to be unnumbered in your output, simply append an
-asterisk to the command name.  Examples of both
-numbered and unnumbered headings will appear throughout the
-balance of this sample document.
+LXC, also known as Linux container, is created for the services the virtual servers will provide. The underlying hardware resources and kernel is shared from all the containers. You can have one container that is equivalent of a LAMP\footnote{LAMP is an open source Web development platform that uses Linux as the operating system, Apache as the Web server, MySQL as the rational database management system and PHP/Perl/Python as the object-oriented scripting language.} server which has all the required software installed, the configuration files and IP address etc. But the container doesn't have the kernel and the RAM directly associated with it. The kernel and the RAM and some other resources and on the lower level. You can also have a DNS or a DHCP or a file server container at the same time besides the LAMP container. Those containers share the underlying RAM, hard drive, CPU and the kernel. RAM still be controlled by the single host kernel who is expert. It's like running services on any kind of server. You don't need to worry about RAM or hard drive allocation. Furthermore, When one of the server needs to be restart, you don't need to have the boot process like the virtual machine has. Also the containers are completely segregated. They have their own IP addresses. They interact with the rest of the network such as the host and other containers just like they are individual servers but using the same kernel. 
 
-Because the entire article is contained in
-the \textbf{document} environment, you can indicate the
-start of a new paragraph with a blank line in your
-input file; that is why this sentence forms a separate paragraph.
+\subsection{Disadvantage of Docker Container}
+Even though there are some improvement of container comparing to virtual machine, there are some drawbacks of container too. 
+\begin{itemize}
+\item As containers share the kernel with the host, you cannot have a windows container running on a linux kernel.
+\item Since containers need to be the same with host kernel, you cannot have multiple different containers running at the same time. 
+\item The container is more like a service, it does not provide you the complete virtualization.
+\item Docker is till young. It requires some new built-in features to support container such as LXC or runC. Many ole machines will not able to use docker.
+\item Thought docker supports cross-platform, the containers might not work the same in different systems and even different distributions. In linux, the kernels in different distribution, such as Ubuntu, Fedora and CentOS etc, are not consistent.
+\item Security issues need to be evaluated. The kernel is shared among containers. Containers could be malicious. 
+\end{itemize}
 
-\subsection{Type Changes and {\subsecit Special} Characters}
-We have already seen several typeface changes in this sample.  You
-can indicate italicized words or phrases in your text with
-the command \texttt{{\char'134}textit}; emboldening with the
-command \texttt{{\char'134}textbf}
-and typewriter-style (for instance, for computer code) with
-\texttt{{\char'134}texttt}.  But remember, you do not
-have to indicate typestyle changes when such changes are
-part of the \textit{structural} elements of your
-article; for instance, the heading of this subsection will
-be in a sans serif\footnote{A third footnote, here.
-Let's make this a rather short one to
-see how it looks.} typeface, but that is handled by the
-document class file. Take care with the use
-of\footnote{A fourth, and last, footnote.}
-the curly braces in typeface changes; they mark
-the beginning and end of
-the text that is to be in the different typeface.
+\section{Performance}
+\subsection{Virtual Machines vs. Container}
 
-You can use whatever symbols, accented characters, or
-non-English characters you need anywhere in your document;
-you can find a complete list of what is
-available in the \textit{\LaTeX\
-User's Guide}\cite{Lamport:LaTeX}.
+\begin{table*}[ht]
+\centering
+\begin{tabularx}{15cm}{*{7}{|C}|}
+    \hline
+    \multicolumn{2}{|c|}{\textbf{Seo et al. (2014)\cite{}}} & \multicolumn{2}{|c|}{\textbf{Scheepers (2014) \cite{}}} & \multicolumn{3}{|c|}{\textbf{Felter et al. (2014) \cite{}}} \\
+    \hline
+    \textbf{Docker} & \textbf{KVM} & \textbf{XenServer (Xen)} & \textbf{CoreOS (LXC)} & \textbf{Native} & \textbf{Docker} & \textbf{KVM} \\
+    \hline
+        Boot Time short & Boot time long & Calculation Speed is faster & Calculation Speed is Slower & Overhead (wastage of resources) & Slightly less overhead than Native & Slightly less than Native and Docker \\
+    \hline
+    Calculation Speed is faster & Calculation Speed is Slower & Less time to accomplish request & Longer time to accomplish request & Slow Execution equal to Docker & Slow Execution equal to Native & Fast Execution \\
+    \hline
+    No Guest OS & Works Independently & Better in sense of equally distributing resources & Better in sense of executing isolated processes & - & Mature Innovation & Mature Innovation \\
+    \hline
+\end{tabularx}
+\caption{Comparison Table based on Different Virtual Machines and Containerized Technology}
+\label{table:tb_cpsn}
+\end{table*}
 
 \subsection{Math Equations}
 You may want to display math equations in three distinct styles:
