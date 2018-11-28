@@ -44,7 +44,6 @@
 % ===============================================================
 %
 % For tracking purposes - this is V2.0 - May 2012
-
 \documentclass{sig-alternate}
 \usepackage{comment}
 
@@ -56,10 +55,7 @@
 %\crdata{0-12345-67-8/90/01}  % Allows default copyright data (0-89791-88-6/97/05) to be over-ridden - IF NEED BE.
 % --- End of Author Metadata ---
 
-\title{Alternate {\ttlit ACM} SIG Proceedings Paper in LaTeX
-Format\titlenote{(Produces the permission block, and
-copyright information). For use with
-SIG-ALTERNATE.CLS. Supported by ACM.}}
+\title{Docker is Not a Virtual Machine}
 %\subtitle{[Extended Abstract]
 %\titlenote{A full version of this paper is available as
 %\textit{Author's Guide to Preparing ACM SIG Proceedings Using
@@ -107,11 +103,11 @@ SIG-ALTERNATE.CLS. Supported by ACM.}}
 %
 % 1st. author
 \alignauthor
-John Trovato\titlenote{Dr.~Trovato insisted his name be first.}\\
-       \affaddr{Institute for Clarity in Documentation}\\
-       \affaddr{1932 Wallamaloo Lane}\\
-       \affaddr{Wallamaloo, New Zealand}\\
-       \email{trovato@corporation.com}
+Shengfeng Li\\
+       \affaddr{Computer Science Department}\\
+       \affaddr{Louisiana State University}\\
+       \affaddr{Baton Rouge, Louisiana 70803, USA}\\
+       \email{sli49@lsu.edu}
 % 2nd. author
 %\alignauthor
 %G.K.M. Tobin\titlenote{The secretary disavows
@@ -135,30 +131,8 @@ John Trovato\titlenote{Dr.~Trovato insisted his name be first.}\\
 
 \maketitle
 \begin{abstract}
-This paper provides a sample of a \LaTeX\ document which conforms,
-somewhat loosely, to the formatting guidelines for
-ACM SIG Proceedings. It is an {\em alternate} style which produces
-a {\em tighter-looking} paper and was designed in response to
-concerns expressed, by authors, over page-budgets.
-It complements the document \textit{Author's (Alternate) Guide to
-Preparing ACM SIG Proceedings Using \LaTeX$2_\epsilon$\ and Bib\TeX}.
-This source file has been written with the intention of being
-compiled under \LaTeX$2_\epsilon$\ and BibTeX.
-
-
-The developers have tried to include every imaginable sort
-of ``bells and whistles", such as a subtitle, footnotes on
-title, subtitle and authors, as well as in the text, and
-every optional component (e.g. Acknowledgments, Additional
-Authors, Appendices), not to mention examples of
-equations, theorems, tables and figures.
-
-
-To make best use of this sample document, run it through \LaTeX\
-and BibTeX, and compare this source code with the printed
-output produced by the dvi file. A compiled PDF version
-is available on the web page to help you with the
-`look and feel'.
+Virtual machine was defined as an efficient, isolated duplicate of a real computer machine. It dates to the 1960s and still widely be used in operating system. While Docker 
+is a computer program that also provide an environment that can run other applications on top of the kernel in an isolated way and is still a very young program with only five years age. Many people might think that docker is some sort of lightweight or trimmed down virtual machine but it's actually not. Though virtual machine and docker both run on the top of any operating system, they have very different architectures. 
 \end{abstract}
 
 
@@ -173,33 +147,40 @@ is available on the web page to help you with the
 
 
 \section{Introduction}
-The \textit{proceedings} are the records of a conference.
-ACM seeks to give these conference by-products a uniform,
-high-quality appearance.  To do this, ACM has some rigid
-requirements for the format of the proceedings documents: there
-is a specified format (balanced  double columns), a specified
-set of fonts (Arial or Helvetica and Times Roman) in
-certain specified sizes (for instance, 9 point for body copy),
-a specified live area (18 $\times$ 23.5 cm [7" $\times$ 9.25"]) centered on
-the page, specified size of margins (1.9 cm [0.75"]) top, (2.54 cm [1"]) bottom
-and (1.9 cm [.75"]) left and right; specified column width
-(8.45 cm [3.33"]) and gutter size (.83 cm [.33"]).
+This paper tries to illustrate the architecture of virtual machine and the docker. And by comparing the difference between them, it helps us obtain a better perspective about which technology fits your scenario better. Virtual machine technology has been developing for more than 50 years. It is universally known and is still widely used. Docker, on the other way, is very new comparing to virtual machine and is becoming more and more popular these days as it can avoid the overhead of resource utilization.
 
-The good news is, with only a handful of manual
-settings\footnote{Two of these, the {\texttt{\char'134 numberofauthors}}
-and {\texttt{\char'134 alignauthor}} commands, you have
-already used; another, {\texttt{\char'134 balancecolumns}}, will
-be used in your very last run of \LaTeX\ to ensure
-balanced column heights on the last page.}, the \LaTeX\ document
-class file handles all of this for you.
+A virtual machine emulates a physical computing environment, but requests for CPU, memory, hard disk, network and other hardware resources. Those requests are managed by a virtualization layer which translates these requests to the underlying physical hardware. Virtual machines are powered by hypervisors which is a software that can provides isolation for virtual machines running on top of physical host. In other word, you can several virtual machines running simultaneously on a infrastructure without interfering with each other. Many cloud infrastructure provides such virtualization such as Google Computer Engine, Microsoft Azure and Amazon EC2. However, since all the virtual machines need to require their own hardware resource, resource overhead is involved. 
 
-The remainder of this document is concerned with showing, in
-the context of an ``actual'' document, the \LaTeX\ commands
-specifically available for denoting the structure of a
-proceedings paper, rather than with giving rigorous descriptions
-or explanations of such commands.
+Docker is an modern open source platform. The goal of docker is to make development, shipment and deployment easier for developers. When Docker emerged in 2013, container exploded in popularity. Docker is a very new software. However, the technology docker originally used was LinuX Containers(LXC)\footnote{LXC is the well known set of tools, templates, library and language bindings. It's pretty low level, very flexible and covers just about every containment feature supported by the upstream kernel.}. LXC was the first, most complete implementation of Linux container manager and it was implemented in 2008. LXC can run on a single Linux kernel without requiring any patches. And in the later years docker replaced LXC container manager with its own library, libcontainer(runC)\footnote{runC is a CLI tool for spawning and running containers according to the OCI specification}. Container is an image generated by the docker which has all the supporting dependencies packaged into a standard form. Containers also run on top of the kernel but share the hardware resource with the kernel. This architecture makes container much lighter than the virtual machine, hence extremely improve the performance. And the containers keep running in an isolated way as well.
 
-\section{The {\secit Body} of The Paper}
+This paper is a review on technology of virtual machine and docker, and will compare the performance between those two technology. The article is organized as follow. The first section will introduce the technology of virtual machine. The second section will introduce the technology of docker. The third section will focus on the comparison between docker and virtual machine. 
+
+\section{Virtual Machine}
+Virtual machine begins with some type of infrastructure which could be you laptop, a dedicated server running in a data center or a virtual private server that you're using in the cloud such as digital ocean, Google Computer Engine, Microsoft Azure and Amazon EC2 etc. On top of the infrastructure runs an operating system that could be Mac OS, Windows or some distribution of Linux. When we talking about VMs(Virtual machines), the operating system is commonly labeled as the host. Above the host operating system, we have a thing called hypervisor. Hypervisor is a software which provides isolation for virtual machines running on top of host operating system. We can think of virtual machine as a self-contained computer packed into a single file but something needs to be able to run that file. That's where a hypervisor comes into play. There are two types of hypervisors. The first type of hypervisors directly link to the infrastructure such as HyperKit(OSX), Hyper-V(Win) and KVM(Linux). Another one runs an application on the host operating system such as VirtualBox and VMWare. Usually hypervisors belong to the first type are more efficient because they can bypass the host operating system and directly interact with the hardware of the server. The next layer above the hypervisor is the guest operating systems\footnote{VM is called as the guest while the environment it runs on is called the host}. We can run as many guest OS as possible as long as the infrastructure can afford the hardware resource requirement in total isolation. Those guest operating systems are all controlled by the hypervisor and are not required to be the same. We could run Windows, Mac OS, distribution Linux and other supported OS.  On top of the OS, there are applications and libraries. The Figure \ref{fig:vma} shows the architecture of the virtual machine. 
+
+\begin{figure}[ht]
+\centering
+\psfig{file=VM_architecture.eps, height=2in, width=2in,}
+\caption{Virtual Machine Architecture}
+\label{fig:vma}
+\vskip -6pt
+\end{figure}
+
+\subsection{Disadvantage of Virtual Machine}
+Each guest OS requires its own requirement of hardware resources. Assume each guest OS require 1GB disk space, then the total disk space required would be 1GB $\times$ 3. Not to mention other requirements such as CPU, memory and network. Whenever an instance starts within the virtual environment, all the resources that have been assigned to it start being used. So if you assign four gigabytes of RAM to a virtual server as soon as that virtual server has started, four gigabytes of RAM from the hardware will automatically be assigned to that virtual server. If you have three server that boot up with four gigabytes of RAM, 4GB $\times$ 3 will be allocated to those servers whether or not they actually need it. Each one of those servers may only need one gigabyte RAM currently and other idle RAM can't be given somewhere else. Every single instance of an operating system has to have these over-allocated resources allocated to it and  This results in a lot of resources waste. Another issue is that the virtual machine emulating an entire server which means you have to run the whole boot up process. Suppose you create a virtual server that only does DNS, when you do some configuration, you have to reboot the entire computer and going through the whole boot process which takes a lot of time. 
+
+\section{Docker Containers}
+At the beginning, the docker contains also need the infrastructure. The second level is the host operating system. Then we have a layer called docker daemon. Docker daemon is a service that runs in the background on our host OS and manages everything required to run and interact with docker containers. After that, we have binaries and libraries just like the virtual machines but instead of being ran on a guest OS, they get built into special packages called docker images. The docker daemon runs those images. The applications would end up residing in its own docker image and will be managed independently by the docker daemon. Typically, each application and its library dependencies get packed into the same docker image. Each application is still isolated. In docker scenario, we don't need to run any type of hypervisor or virtual machine. Instead the docker daemon communicates directly with the host operating system and knows how to ration the resources for the running docker containers. It's also an expert and ensuring each container is isolated from both the host OS and other containers. There is also no virtualization needed with docker since it runs directly on the host OS. The Figure \ref{fig:da} shows the architecture of the docker. 
+
+\begin{figure}[ht]
+\centering
+\psfig{file=docker_architecture.eps, height=2in, width=2in,}
+\caption{Docker Architecture}
+\label{fig:da}
+\vskip -6pt
+\end{figure}
+
+\subsection{Advantage of Docker(LXC)}
 Typically, the body of a paper is organized
 into a hierarchical structure, with numbered or unnumbered
 headings for sections, subsections, sub-subsections, and even
